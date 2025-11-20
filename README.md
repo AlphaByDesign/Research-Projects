@@ -1,10 +1,10 @@
-# 🐍 Python Feature Engineering Toolkit for Time-Series Analysis
+# Python Feature Engineering Toolkit for Time-Series Analysis
 
 A specialized Python toolkit for **crypto data manipulation**, utilizing **Polars** for high-performance data processing. This package provides methods for securely fetching data from **Binance**, generating time-series features (like lags and log returns), and preparing the data for an **Autoregressive (AR) Model**.
 
 ---
 
-## ✨ Features
+##  Features
 
 This repository's core logic, primarily in `src/features.py`, focuses on efficient, model-ready data creation:
 
@@ -15,7 +15,7 @@ This repository's core logic, primarily in `src/features.py`, focuses on efficie
 
 ---
 
-## 🎯 Project Context: AR Model Preparation
+## Project Context: AR Model Preparation
 
 The primary goal of the features in this toolkit is to create a robust, high-quality dataset suitable for training a **Time-Series Forecasting Model**.
 
@@ -25,7 +25,7 @@ The primary goal of the features in this toolkit is to create a robust, high-qua
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Installation
 
@@ -34,3 +34,4 @@ Clone the repository to your local machine:
 ```bash
 git clone [https://github.com/AlphaByDesign/PythonProject.git](https://github.com/AlphaByDesign/PythonProject.git)
 cd PythonProject
+
