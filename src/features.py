@@ -9,10 +9,17 @@ from typing import List
 
 client = Client()
 
-def get_live_historical_data(
+def get_historical_data(
         symbol: str = "BTCUSDT",
         interval: str = "4h",
         start_date:str = "2020-11-11") -> pl.DataFrame:
+
+    # Arguments:
+    # symbol: symbol in str format
+    # interval: specify the time horizon
+    # start_date: starting date
+    # end_date: ending date
+
 
     # using datetime.now to get the latest available data
 
@@ -36,9 +43,11 @@ def get_live_historical_data(
         pl.col("open"),
         pl.col("high"),
         pl.col("low"),
-        pl.col("close")])
+        pl.col("close"),
+        pl.col("volume")])
 
         return df.sort("date")
+
 
 # Feature Engineering
 
@@ -65,13 +74,47 @@ def create_time_series_transform(
 
 # Calculate Log Volume
 
-        log_volume = ((pl.cpl(volume_col) / pl.col(volume_col).shift(forecast_horizon)).log().alias("log_volume"))
+        log_volume = ((pl.col(volume_col) / pl.col(volume_col).shift(forecast_horizon)).log().alias("log_volume"))
 
 
         df = df.with_columns(log_returns, log_volume)
 
         return df
 
+# Create dynamic lag function. The functions aim is to loop through any number of lags required.
+
+def create_lag_feature(
+        df: pl.DataFrame,
+        features: List[str],
+        max_lags: int,
+        forecast_horizon: int = 1) -> pl.DataFrame:
+
+# Arguments:
+        # df: the input df
+        # A list of feature column names (eg."close_log_return")
+        # max_lags: the max number of lags to create (n)
+        # forecast_horizon: the base shift period
+
+# Define the range of lag periods (1 through max lags)
+
+        lag_periods = range(1,max_lags+1)
+        lag_expressions = []
+
+# Loop over features and period to build all expressions.
+
+        for feature in features:
+            for lag in lag_periods:
+                expression = pl.col(feature).shift(forecast_horizon * lag).alias(f'{feature}_lag{lag}')
+                lag_expressions.append(expression)
+
+# Apply all lag expressions
+        df = df.with_columns(lag_expressions)
+
+# Drop all NaN from lagged/log features
+
+        df = df.drop_nulls()
+
+        return df
 
 
 
